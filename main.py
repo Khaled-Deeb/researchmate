@@ -6,6 +6,7 @@ from app.compare import (
     save_csv_comparison_table,
     save_markdown_comparison_table,
 )
+from app.config import settings
 from app.graph import ask_researchmate_graph
 from app.review import review_summary
 from app.storage import save_summary
@@ -94,6 +95,30 @@ def run_graph_ask(message: str) -> None:
     print(result)
 
 
+def run_openai_check() -> None:
+    """
+    Check whether OpenAI-powered mode is configured.
+
+    This does not call the API.
+    """
+    print("=" * 80)
+    print("OPENAI CONFIG CHECK")
+    print("=" * 80)
+    print(f"RESEARCHMATE_MODE: {settings.mode}")
+    print(f"OPENAI_MODEL: {settings.openai_model}")
+    print(f"OPENAI_EMBEDDING_MODEL: {settings.openai_embedding_model}")
+    print(f"OPENAI_API_KEY present: {bool(settings.openai_api_key)}")
+    print(f"OpenAI mode active: {settings.use_openai}")
+
+    if settings.use_openai:
+        print("\nOpenAI-powered mode is configured.")
+    else:
+        print(
+            "\nFallback mode is active. "
+            "This is expected if you have not added an API key yet."
+        )
+
+
 def main():
     parser = argparse.ArgumentParser(
         description="ResearchMate: Agentic literature review assistant"
@@ -147,6 +172,11 @@ def main():
         help="Message/question for ResearchMate",
     )
 
+    subparsers.add_parser(
+        "openai-check",
+        help="Check whether OpenAI-powered mode is configured",
+    )
+
     args = parser.parse_args()
 
     if args.command == "summarize":
@@ -163,6 +193,9 @@ def main():
 
     elif args.command == "graph-ask":
         run_graph_ask(args.message)
+
+    elif args.command == "openai-check":
+        run_openai_check()
 
 
 if __name__ == "__main__":

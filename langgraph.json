@@ -1,0 +1,7 @@
+{
+  "dependencies": ["."],
+  "graphs": {
+    "researchmate": "./app/chat_graph.py:graph"
+  },
+  "env": "./.env"
+}

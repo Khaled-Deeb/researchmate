@@ -339,6 +339,7 @@ ResearchMate is built in layers:
 5. **Export layer**: creates Markdown and CSV comparison tables.
 
 The current version runs in fallback mode without an API key. The architecture is prepared for future OpenAI-powered semantic search, structured extraction, and LLM-based routing.
+
 ---
 
 ## Roadmap

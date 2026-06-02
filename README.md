@@ -116,10 +116,12 @@ researchmate/
 
 ## Setup
 
+Prerequisite: install `uv` before running the setup commands.
+
 ### 1. Clone the repository
 
 ```powershell
-git clone <your-repo-url>
+git clone https://github.com/Khaled-Deeb/researchmate.git
 cd researchmate
 ```
 
@@ -147,7 +149,7 @@ OPENAI_EMBEDDING_MODEL=text-embedding-3-small
 RESEARCHMATE_MODE=fallback
 ```
 
-For OpenAI-compatible mode, fill in your local `.env`:
+For OpenAI-compatible mode, fill in your local `.env`. The example below uses ProxyAPI as an OpenAI-compatible endpoint:
 
 ```env
 OPENAI_API_KEY=your_real_key_here

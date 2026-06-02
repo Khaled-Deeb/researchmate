@@ -1,4 +1,4 @@
-import argparse
+﻿import argparse
 
 from app.agent import ask_researchmate
 from app.compare import (
@@ -11,6 +11,7 @@ from app.graph import ask_researchmate_graph
 from app.review import review_summary
 from app.storage import save_summary
 from app.summarizer import create_rough_paper_summary
+from app.openai_summarizer import create_openai_paper_summary
 from app.tools import search_paper_text
 
 
@@ -29,6 +30,24 @@ def run_summarize(pdf_path: str) -> None:
     output_path = save_summary(approved_summary)
 
     print("\nSummary approved and saved.")
+    print(f"Saved to: {output_path}")
+
+def run_summarize_openai(pdf_path: str) -> None:
+    """
+    Create an OpenAI-powered structured summary, ask for human approval,
+    then save it.
+    """
+    summary = create_openai_paper_summary(pdf_path)
+
+    approved_summary = review_summary(summary)
+
+    if approved_summary is None:
+        print("\nSummary rejected. Nothing was saved.")
+        return
+
+    output_path = save_summary(approved_summary)
+
+    print("\nOpenAI summary approved and saved.")
     print(f"Saved to: {output_path}")
 
 
@@ -135,6 +154,15 @@ def main():
         help="Path to the PDF file",
     )
 
+    summarize_openai_parser = subparsers.add_parser(
+        "summarize-openai",
+        help="Create, review, and save an OpenAI-powered structured summary for a PDF",
+    )
+    summarize_openai_parser.add_argument(
+        "pdf_path",
+        help="Path to the PDF file",
+    )
+
     subparsers.add_parser(
         "compare",
         help="Create a comparison table from approved summaries",
@@ -181,6 +209,9 @@ def main():
 
     if args.command == "summarize":
         run_summarize(args.pdf_path)
+    
+    elif args.command == "summarize-openai":
+        run_summarize_openai(args.pdf_path)
 
     elif args.command == "compare":
         run_compare()

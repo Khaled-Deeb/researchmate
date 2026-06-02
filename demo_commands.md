@@ -1,4 +1,4 @@
-﻿# ResearchMate Demo Commands
+# ResearchMate Demo Commands
 
 This file contains simple commands for demonstrating the current fallback version of ResearchMate.
 

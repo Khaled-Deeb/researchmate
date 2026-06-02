@@ -1,4 +1,4 @@
-﻿from app.schemas import PaperSummary
+from app.schemas import PaperSummary
 
 
 EDITABLE_FIELDS = [

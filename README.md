@@ -66,33 +66,32 @@ Planned:
 
 ---
 
-## Project structure
-
-```text
 researchmate/
-â”œâ”€â”€ app/
-â”‚   â”œâ”€â”€ agent.py              # temporary rule-based assistant/router
-â”‚   â”œâ”€â”€ compare.py            # comparison table creation/export
-â”‚   â”œâ”€â”€ config.py             # environment/config settings
-â”‚   â”œâ”€â”€ graph.py              # LangGraph workflow
-â”‚   â”œâ”€â”€ ingest.py             # PDF loading and chunking
-â”‚   â”œâ”€â”€ llm.py                # OpenAI model factory scaffold, inactive in fallback mode
-â”‚   â”œâ”€â”€ openai_summarizer.py  # OpenAI structured summarizer scaffold, inactive for now
-â”‚   â”œâ”€â”€ review.py             # human approval/edit/reject workflow
-â”‚   â”œâ”€â”€ schemas.py            # structured paper-summary schema
-â”‚   â”œâ”€â”€ storage.py            # save/load approved summaries
-â”‚   â”œâ”€â”€ tools.py              # LangChain tools
-â”‚   â””â”€â”€ vector_store.py       # semantic vector-search scaffold, inactive for now
-â”œâ”€â”€ data/
-â”‚   â”œâ”€â”€ papers/               # local PDFs, not committed
-â”‚   â”œâ”€â”€ summaries/            # generated summaries, not committed
-â”‚   â””â”€â”€ exports/              # generated tables, not committed
-â”œâ”€â”€ demo_commands.md          # ready-to-use demo commands
-â”œâ”€â”€ main.py                   # CLI entry point
-â”œâ”€â”€ pyproject.toml
-â”œâ”€â”€ .env.example
-â””â”€â”€ README.md
-```
+|-- app/
+|   |-- agent.py
+|   |-- compare.py
+|   |-- config.py
+|   |-- graph.py
+|   |-- ingest.py
+|   |-- llm.py
+|   |-- openai_summarizer.py
+|   |-- review.py
+|   |-- schemas.py
+|   |-- storage.py
+|   |-- summarizer.py
+|   |-- tools.py
+|   |-- vector_store.py
+|-- data/
+|   |-- papers/
+|   |-- summaries/
+|   |-- exports/
+|-- demo_commands.md
+|-- main.py
+|-- pyproject.toml
+|-- .env.example
+|-- .gitignore
+|-- .gitattributes
+|-- README.md
 
 ---
 

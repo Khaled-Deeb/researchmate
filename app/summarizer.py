@@ -1,4 +1,4 @@
-﻿from pathlib import Path
+from pathlib import Path
 
 from app.ingest import load_pdf
 from app.schemas import PaperSummary

@@ -1,4 +1,4 @@
-﻿from pathlib import Path
+from pathlib import Path
 
 from langchain_core.documents import Document
 from langchain_core.vectorstores import InMemoryVectorStore

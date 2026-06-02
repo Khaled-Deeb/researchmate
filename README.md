@@ -66,6 +66,9 @@ Planned:
 
 ---
 
+## Project structure
+
+```text
 researchmate/
 |-- app/
 |   |-- agent.py
@@ -92,7 +95,7 @@ researchmate/
 |-- .gitignore
 |-- .gitattributes
 |-- README.md
-
+```
 ---
 
 ## Setup

@@ -9,6 +9,7 @@ from typing_extensions import TypedDict
 
 from app.compare import create_markdown_comparison_table
 from app.openai_qa import answer_paper_question_openai
+from app.openai_compare import create_quick_comparison_from_pdfs
 from app.openai_summarizer import create_openai_paper_summary
 from app.summarizer import extract_title_from_first_page
 
@@ -243,6 +244,14 @@ def chat_node(state: ChatState) -> dict:
     try:
         if "list papers" in lowered or "available papers" in lowered:
             answer = list_available_papers()
+
+        elif (
+            "quick compare" in lowered
+            or "compare all pdf" in lowered
+            or "compare all papers" in lowered
+            or "compare folder" in lowered
+        ):
+            answer = create_quick_comparison_from_pdfs()
 
         elif "compare" in lowered or "comparison" in lowered:
             answer = create_markdown_comparison_table()

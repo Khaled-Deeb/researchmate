@@ -12,6 +12,7 @@ from app.review import review_summary
 from app.storage import save_summary
 from app.summarizer import create_rough_paper_summary
 from app.openai_summarizer import create_openai_paper_summary
+from app.openai_qa import answer_paper_question_openai
 from app.tools import search_paper_text
 
 
@@ -137,6 +138,23 @@ def run_openai_check() -> None:
             "This is expected if you have not added an API key yet."
         )
 
+def run_ask_openai(message: str, pdf_path: str) -> None:
+    """
+    Ask an OpenAI-powered grounded question about a PDF.
+    """
+    result = answer_paper_question_openai(
+        query=message,
+        pdf_path=pdf_path,
+    )
+
+    print("=" * 80)
+    print("RESEARCHMATE OPENAI Q&A")
+    print("=" * 80)
+    print(f"PDF: {pdf_path}")
+    print(f"User message: {message}")
+    print("=" * 80)
+    print(result)
+
 
 def main():
     parser = argparse.ArgumentParser(
@@ -200,6 +218,20 @@ def main():
         help="Message/question for ResearchMate",
     )
 
+    ask_openai_parser = subparsers.add_parser(
+        "ask-openai",
+        help="Ask an OpenAI-powered grounded question about a PDF",
+    )
+    ask_openai_parser.add_argument(
+        "message",
+        help="Question for ResearchMate",
+    )
+    ask_openai_parser.add_argument(
+        "--pdf",
+        default="data/papers/sample.pdf",
+        help="Path to the PDF file. Default: data/papers/sample.pdf",
+    )
+
     subparsers.add_parser(
         "openai-check",
         help="Check whether OpenAI-powered mode is configured",
@@ -224,6 +256,11 @@ def main():
 
     elif args.command == "graph-ask":
         run_graph_ask(args.message)
+    elif args.command == "ask-openai":
+        run_ask_openai(
+            message=args.message,
+            pdf_path=args.pdf,
+        )
 
     elif args.command == "openai-check":
         run_openai_check()

@@ -1,0 +1,31 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+
+# Secrets
+.env
+
+# Local LangGraph files
+.langgraph_api/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# User data / generated data
+data/papers/*
+!data/papers/.gitkeep
+
+data/summaries/*
+!data/summaries/.gitkeep
+
+data/exports/*
+!data/exports/.gitkeep
+
+# OS/editor
+.DS_Store
+Thumbs.db
+.vscode/

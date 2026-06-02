@@ -171,9 +171,9 @@ The current fallback workflow does this:
 
 ```text
 User question
-â†’ LangGraph select_tool node
-â†’ answer/search/summarize/compare/export node
-â†’ final result
+-> LangGraph select_tool node
+-> answer/search/summarize/compare/export node
+-> final result
 ```
 
 ---
@@ -273,9 +273,9 @@ The project includes a LangGraph workflow:
 
 ```text
 User message
-â†’ select_tool node
-â†’ answer/search/summarize/compare/export node
-â†’ final result
+-> select_tool node
+-> answer/search/summarize/compare/export node
+-> final result
 ```
 
 The current router is rule-based so the project can run without an API key.

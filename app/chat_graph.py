@@ -4,25 +4,17 @@ from typing import Annotated, Any
 from langchain_core.messages import AIMessage, AnyMessage
 from langgraph.graph import END, START, StateGraph
 from langgraph.graph.message import add_messages
+from pypdf import PdfReader
 from typing_extensions import TypedDict
 
 from app.compare import create_markdown_comparison_table
 from app.openai_qa import answer_paper_question_openai
 from app.openai_summarizer import create_openai_paper_summary
+from app.summarizer import extract_title_from_first_page
 
 
+PAPERS_DIR = Path("data/papers")
 DEFAULT_PDF_PATH = "data/papers/sample.pdf"
-
-AVAILABLE_PAPERS = {
-    "sample": "data/papers/sample.pdf",
-    "paper1": "data/papers/sample.pdf",
-    "web table": "data/papers/sample.pdf",
-    "web table search": "data/papers/sample.pdf",
-    "result selection": "data/papers/sample.pdf",
-    "paper2": "data/papers/paper2.pdf",
-    "coter": "data/papers/paper2.pdf",
-    "conditional optimal transport": "data/papers/paper2.pdf",
-}
 
 
 class ChatState(TypedDict):
@@ -58,18 +50,123 @@ def get_last_user_message(messages: list[AnyMessage]) -> str:
     return ""
 
 
+def get_pdf_files() -> list[Path]:
+    """
+    Return all local PDF files available for the demo.
+
+    sample.pdf is placed first if it exists, so the demo remains stable:
+    paper1 -> sample.pdf
+    paper2 -> the next PDF
+    """
+    if not PAPERS_DIR.exists():
+        return []
+
+    pdf_files = sorted(
+        PAPERS_DIR.glob("*.pdf"),
+        key=lambda path: (
+            path.name.lower() != "sample.pdf",
+            path.name.lower(),
+        ),
+    )
+
+    return pdf_files
+
+
+def extract_pdf_title(pdf_path: Path) -> str:
+    """
+    Extract a rough title from the first page of a PDF.
+
+    This is only for paper selection/listing in the chat UI.
+    The real structured summary still uses the summarizer.
+    """
+    try:
+        reader = PdfReader(str(pdf_path))
+
+        if not reader.pages:
+            return pdf_path.stem
+
+        first_page_text = reader.pages[0].extract_text() or ""
+        title = extract_title_from_first_page(first_page_text)
+
+        if title and title != "Unknown title":
+            return title
+
+        return pdf_path.stem
+
+    except Exception:
+        return pdf_path.stem
+
+
+def normalize_text(text: str) -> str:
+    """
+    Normalize text for simple matching.
+    """
+    return " ".join(text.lower().replace("_", " ").replace("-", " ").split())
+
+
+def get_paper_catalog() -> list[dict[str, Any]]:
+    """
+    Build a small catalog of available local PDFs.
+
+    Each item has:
+    - index: paper number shown to the user
+    - path: local PDF path
+    - title: rough extracted title
+    - aliases: simple keywords for selection
+    """
+    catalog = []
+
+    for index, pdf_path in enumerate(get_pdf_files(), start=1):
+        title = extract_pdf_title(pdf_path)
+
+        aliases = [
+            f"paper{index}",
+            f"paper {index}",
+            pdf_path.stem,
+            normalize_text(pdf_path.stem),
+            normalize_text(title),
+        ]
+
+        catalog.append(
+            {
+                "index": index,
+                "path": pdf_path,
+                "title": title,
+                "aliases": aliases,
+            }
+        )
+
+    return catalog
+
+
 def choose_pdf_path(user_message: str) -> str:
     """
     Choose a local PDF based on simple keywords in the user message.
 
-    This is intentionally simple for the demo.
-    Later, the UI can support real file upload or paper selection.
+    Examples:
+    - "paper1"
+    - "paper 2"
+    - "COTER"
+    - "sample"
+    - part of the title
     """
-    lowered = user_message.lower()
+    lowered = normalize_text(user_message)
+    catalog = get_paper_catalog()
 
-    for keyword, pdf_path in AVAILABLE_PAPERS.items():
-        if keyword in lowered:
-            return pdf_path
+    for paper in catalog:
+        for alias in paper["aliases"]:
+            normalized_alias = normalize_text(alias)
+
+            if normalized_alias and normalized_alias in lowered:
+                return str(paper["path"])
+
+    default_path = Path(DEFAULT_PDF_PATH)
+
+    if default_path.exists():
+        return DEFAULT_PDF_PATH
+
+    if catalog:
+        return str(catalog[0]["path"])
 
     return DEFAULT_PDF_PATH
 
@@ -78,17 +175,33 @@ def list_available_papers() -> str:
     """
     Show available local demo papers.
     """
+    catalog = get_paper_catalog()
+
+    if not catalog:
+        return (
+            "No PDF files were found.\n\n"
+            "Put PDF files inside data/papers/ and ask again."
+        )
+
     lines = [
         "Available local demo papers:",
         "",
-        "- paper1 / sample / web table search -> data/papers/sample.pdf",
-        "- paper2 / COTER -> data/papers/paper2.pdf",
-        "",
-        "Examples:",
-        '- "Ask about COTER: what is the method?"',
-        '- "Summarize paper2"',
-        '- "What is the main limitation of paper1?"',
     ]
+
+    for paper in catalog:
+        lines.append(
+            f"- paper{paper['index']} -> {paper['path']} | {paper['title']}"
+        )
+
+    lines.extend(
+        [
+            "",
+            "Examples:",
+            '- "Summarize paper1"',
+            '- "What is the main limitation of paper2?"',
+            '- "Ask about COTER: what is the main method?"',
+        ]
+    )
 
     return "\n".join(lines)
 
@@ -118,7 +231,7 @@ def chat_node(state: ChatState) -> dict:
     Main chat node for ResearchMate.
 
     Demo behavior:
-    - list papers -> show available local demo papers
+    - list papers -> show available local PDFs
     - compare -> comparison table from approved summaries
     - summarize -> OpenAI structured summary for selected/default paper
     - otherwise -> OpenAI grounded Q&A over selected/default paper

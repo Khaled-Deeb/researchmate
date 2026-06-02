@@ -1,4 +1,4 @@
-# ResearchMate
+﻿# ResearchMate
 
 **ResearchMate** is an agentic literature-review assistant for research papers.
 
@@ -70,28 +70,28 @@ Planned:
 
 ```text
 researchmate/
-├── app/
-│   ├── agent.py              # temporary rule-based assistant/router
-│   ├── compare.py            # comparison table creation/export
-│   ├── config.py             # environment/config settings
-│   ├── graph.py              # LangGraph workflow
-│   ├── ingest.py             # PDF loading and chunking
-│   ├── llm.py                # OpenAI model factory scaffold, inactive in fallback mode
-│   ├── openai_summarizer.py  # OpenAI structured summarizer scaffold, inactive for now
-│   ├── review.py             # human approval/edit/reject workflow
-│   ├── schemas.py            # structured paper-summary schema
-│   ├── storage.py            # save/load approved summaries
-│   ├── tools.py              # LangChain tools
-│   └── vector_store.py       # semantic vector-search scaffold, inactive for now
-├── data/
-│   ├── papers/               # local PDFs, not committed
-│   ├── summaries/            # generated summaries, not committed
-│   └── exports/              # generated tables, not committed
-├── demo_commands.md          # ready-to-use demo commands
-├── main.py                   # CLI entry point
-├── pyproject.toml
-├── .env.example
-└── README.md
+â”œâ”€â”€ app/
+â”‚   â”œâ”€â”€ agent.py              # temporary rule-based assistant/router
+â”‚   â”œâ”€â”€ compare.py            # comparison table creation/export
+â”‚   â”œâ”€â”€ config.py             # environment/config settings
+â”‚   â”œâ”€â”€ graph.py              # LangGraph workflow
+â”‚   â”œâ”€â”€ ingest.py             # PDF loading and chunking
+â”‚   â”œâ”€â”€ llm.py                # OpenAI model factory scaffold, inactive in fallback mode
+â”‚   â”œâ”€â”€ openai_summarizer.py  # OpenAI structured summarizer scaffold, inactive for now
+â”‚   â”œâ”€â”€ review.py             # human approval/edit/reject workflow
+â”‚   â”œâ”€â”€ schemas.py            # structured paper-summary schema
+â”‚   â”œâ”€â”€ storage.py            # save/load approved summaries
+â”‚   â”œâ”€â”€ tools.py              # LangChain tools
+â”‚   â””â”€â”€ vector_store.py       # semantic vector-search scaffold, inactive for now
+â”œâ”€â”€ data/
+â”‚   â”œâ”€â”€ papers/               # local PDFs, not committed
+â”‚   â”œâ”€â”€ summaries/            # generated summaries, not committed
+â”‚   â””â”€â”€ exports/              # generated tables, not committed
+â”œâ”€â”€ demo_commands.md          # ready-to-use demo commands
+â”œâ”€â”€ main.py                   # CLI entry point
+â”œâ”€â”€ pyproject.toml
+â”œâ”€â”€ .env.example
+â””â”€â”€ README.md
 ```
 
 ---
@@ -169,9 +169,9 @@ The current fallback workflow does this:
 
 ```text
 User question
-→ LangGraph select_tool node
-→ answer/search/summarize/compare/export node
-→ final result
+â†’ LangGraph select_tool node
+â†’ answer/search/summarize/compare/export node
+â†’ final result
 ```
 
 ---
@@ -271,9 +271,9 @@ The project includes a LangGraph workflow:
 
 ```text
 User message
-→ select_tool node
-→ answer/search/summarize/compare/export node
-→ final result
+â†’ select_tool node
+â†’ answer/search/summarize/compare/export node
+â†’ final result
 ```
 
 The current router is rule-based so the project can run without an API key.

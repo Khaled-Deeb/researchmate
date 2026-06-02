@@ -1,4 +1,4 @@
-from app.tools import (
+﻿from app.tools import (
     answer_current_paper_question,
     compare_saved_papers,
     export_comparison_table,

@@ -1,4 +1,4 @@
-from langchain_openai import ChatOpenAI, OpenAIEmbeddings
+﻿from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 
 from app.config import settings
 

@@ -1,4 +1,4 @@
-from pathlib import Path
+﻿from pathlib import Path
 
 from app.ingest import load_pdf
 from app.schemas import PaperSummary
@@ -60,7 +60,7 @@ def extract_abstract(first_page_text: str) -> str:
     text = clean_text(first_page_text, max_chars=6000)
 
     abstract_markers = [
-        "Abstract—",
+        "Abstractâ€”",
         "Abstract -",
         "Abstract:",
         "Abstract",

@@ -172,6 +172,31 @@ def choose_pdf_path(user_message: str) -> str:
     return DEFAULT_PDF_PATH
 
 
+def help_message() -> str:
+    """
+    Show example commands for the chat UI.
+    """
+    return (
+        "ResearchMate chat commands:\n\n"
+        "Paper selection:\n"
+        "- List papers\n"
+        "- Summarize paper1\n"
+        "- Summarize paper2\n"
+        "- Ask about COTER: what is the main method?\n\n"
+        "Question answering:\n"
+        "- What is the main limitation of paper1?\n"
+        "- What dataset does paper2 use?\n"
+        "- What metrics are reported in COTER?\n\n"
+        "Comparison:\n"
+        "- Compare papers\n"
+        "  Creates a quick temporary OpenAI comparison from PDFs in data/papers/.\n\n"
+        "- Compare saved papers\n"
+        "  Uses human-approved summaries saved in data/summaries/.\n\n"
+        "Current limitation:\n"
+        "PDFs must be placed manually in data/papers/. Direct browser upload is future work."
+    )
+
+
 def list_available_papers() -> str:
     """
     Show available local demo papers.
@@ -242,19 +267,25 @@ def chat_node(state: ChatState) -> dict:
     pdf_path = choose_pdf_path(user_message)
 
     try:
-        if "list papers" in lowered or "available papers" in lowered:
+        if (
+            "help" in lowered
+            or "what can you do" in lowered
+            or "commands" in lowered
+        ):
+            answer = help_message()
+
+        elif "list papers" in lowered or "available papers" in lowered:
             answer = list_available_papers()
 
         elif (
-            "quick compare" in lowered
-            or "compare all pdf" in lowered
-            or "compare all papers" in lowered
-            or "compare folder" in lowered
+            "compare saved" in lowered
+            or "saved comparison" in lowered
+            or "approved comparison" in lowered
         ):
-            answer = create_quick_comparison_from_pdfs()
+            answer = create_markdown_comparison_table()
 
         elif "compare" in lowered or "comparison" in lowered:
-            answer = create_markdown_comparison_table()
+            answer = create_quick_comparison_from_pdfs()
 
         elif "summarize" in lowered or "summary" in lowered:
             if not Path(pdf_path).exists():
